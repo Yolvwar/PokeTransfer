@@ -1,6 +1,6 @@
 # Guide Simple - Transférer vos Pokémon entre versions Cobblemon
 
-**Ce guide vous aide à transférer vos Pokémon du PC de Cobblemon Academy 2.0 vers Cobblemon 1.7**
+**Ce guide vous aide à transférer vos Pokémon du PC de Cobblemon Academy 2.0 vers Cobblemon 1.6**
 
 ---
 
@@ -41,7 +41,7 @@ pip --version
 
 ### Si pip n'est pas reconnu
 
-#### 1. Vérifier si pip existe :
+####  Vérifier si pip existe :
 ```powershell
 python -m pip --version
 ```
@@ -66,7 +66,7 @@ Vous devez voir :
 
 #### 4. Ajouter pip au PATH Windows :
 
-1. Tapez **"Modifier les variables d'environnement système"** dans la recherche Windows
+ Tapez **"Modifier les variables d'environnement système"** dans la recherche Windows
 2. Cliquez sur **Variables d'environnement**
 3. Dans **Variables utilisateur**, sélectionnez **Path** et cliquez sur **Modifier**
 4. Cliquez sur **Nouveau** et ajoutez ces deux chemins (adaptez avec votre nom d'utilisateur et version Python) :
@@ -93,7 +93,7 @@ pip install nbtlib
 
 #### Pour trouver le chemin de votre ANCIEN monde :
 
-1. Ouvrez le **Launcher CurseForge**
+ Ouvrez le **Launcher CurseForge**
 2. Faites un **clic droit** sur "Cobblemon Academy 2.0 ou Cacademy"
 3. Cliquez sur "**Ouvrir le dossier**"
 4. Double-cliquez sur : `saves` → puis votre monde
@@ -115,7 +115,7 @@ C:\Users\VotreNom\curseforge\minecraft\Instances\Cacademy v2\saves\world-DEMO
 
 ### Étape 3 : Lancer la conversion
 
-1. Ouvrez un **PowerShell**, à l'emplacement du script :
+ Ouvrez un **PowerShell**, à l'emplacement du script :
 
 2. Dans votre invite de commande, lancez le script :
    ```
@@ -129,6 +129,6 @@ C:\Users\VotreNom\curseforge\minecraft\Instances\Cacademy v2\saves\world-DEMO
 
 ### Étape 4 : Vérifier dans le jeu
 
-1. Lancez **Minecraft** avec **Cobblemon Academy 1.7**
+1. Lancez **Minecraft** avec votre nouveau Modpack **Cobblemon**
 2. Chargez votre **nouveau monde**
 3. Ouvrez votre **PC** et vérifiez que vos Pokémon sont là !
