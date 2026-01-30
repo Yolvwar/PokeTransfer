@@ -129,6 +129,6 @@ C:\Users\VotreNom\curseforge\minecraft\Instances\Cacademy v2\saves\world-DEMO
 
 ### Étape 4 : Vérifier dans le jeu
 
- Lancez **Minecraft** avec **Cobblemon Academy 7**
+1. Lancez **Minecraft** avec votre nouveau Modpack **Cobblemon**
 2. Chargez votre **nouveau monde**
 3. Ouvrez votre **PC** et vérifiez que vos Pokémon sont là !
