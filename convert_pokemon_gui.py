@@ -369,6 +369,7 @@ class PokemonConverter:
         transformed = False
         species = pokemon.get('Species', '')
         
+        # Transformation des IVs
         if 'IVs' in pokemon:
             ivs = pokemon['IVs']
             
@@ -382,6 +383,15 @@ class PokemonConverter:
                 pokemon['IVs'] = new_ivs
                 transformed = True
                 self.log(f"      [OK] IVs transformés")
+            
+            if hasattr(ivs, 'keys') and 'HyperTrained' in ivs:
+                del pokemon['IVs']['HyperTrained']
+        
+        keys_to_remove = ['HeldItemDroppableByAI', 'HeldItemVisible']
+        for key in keys_to_remove:
+            if key in pokemon:
+                del pokemon[key]
+                transformed = True
         
         # Data version
         if 'cobblemon:data_version' in pokemon:
@@ -394,55 +404,109 @@ class PokemonConverter:
             transformed = True
             self.log(f"      [OK] data_version ajouté")
         
-        # Features pour Zarbi/Unown
         if 'unown' in str(species).lower():
             form_id = pokemon.get('FormId', '')
             
             if form_id:
                 self.log(f"      [Zarbi] Forme: {form_id}")
                 
-                if 'Features' in pokemon:
-                    old_features = pokemon['Features']
-                    character_value = form_id
+                old_features = pokemon.get('Features', [])
+                character_value = form_id
+                
+                for feat in old_features:
+                    if hasattr(feat, 'keys') and 'character' in feat:
+                        character_value = str(feat['character'])
+                        break
+                
+                new_features = List[Compound]([
+                    Compound({
+                        'cobblemon:feature_id': String('letter'),
+                        'letter': String(character_value if character_value else 'a')
+                    }),
+                    Compound({
+                        'cobblemon:feature_id': String('ender'),
+                        'ender': Byte(0)
+                    }),
+                    Compound({
+                        'cobblemon:feature_id': String('fertility'),
+                        'fertility': Int(8)
+                    }),
+                    Compound({
+                        'cobblemon:feature_id': String('dynamax_level'),
+                        'dynamax_level': Int(0)
+                    }),
+                    Compound({
+                        'cobblemon:feature_id': String('radiant'),
+                        'radiant': String('regular')
+                    }),
+                    Compound({
+                        'cobblemon:feature_id': String('character'),
+                        'character': String(character_value if character_value else 'a')
+                    })
+                ])
+                
+                pokemon['Features'] = new_features
+                transformed = True
+                self.log(f"      [OK] Features Zarbi reconstruits")
+        else:
+            # TOUS les autres Pokémon doivent avoir fertility, dynamax_level, radiant
+            if 'Features' not in pokemon or not pokemon['Features']:
+                # Créer les features de base
+                new_features = List[Compound]([
+                    Compound({
+                        'cobblemon:feature_id': String('fertility'),
+                        'fertility': Int(8)
+                    }),
+                    Compound({
+                        'cobblemon:feature_id': String('dynamax_level'),
+                        'dynamax_level': Int(0)
+                    }),
+                    Compound({
+                        'cobblemon:feature_id': String('radiant'),
+                        'radiant': String('regular')
+                    })
+                ])
+                pokemon['Features'] = new_features
+                transformed = True
+                self.log(f"      [OK] Features de base ajoutés")
+            else:
+                existing_features = pokemon['Features']
+                feature_ids = set()
+                
+                for feat in existing_features:
+                    if hasattr(feat, 'keys') and 'cobblemon:feature_id' in feat:
+                        feature_ids.add(str(feat['cobblemon:feature_id']))
+                
+                required_features = {'fertility', 'dynamax_level', 'radiant'}
+                missing_features = required_features - feature_ids
+                
+                if missing_features:
+                    features_list = list(existing_features)
                     
-                    for feat in old_features:
-                        if hasattr(feat, 'keys') and 'character' in feat:
-                            character_value = str(feat['character'])
-                            break
-                    
-                    new_features = List[Compound]([
-                        Compound({
-                            'cobblemon:feature_id': String('letter'),
-                            'letter': String(character_value if character_value else 'a')
-                        }),
-                        Compound({
-                            'cobblemon:feature_id': String('ender'),
-                            'ender': Byte(0)
-                        }),
-                        Compound({
+                    if 'fertility' in missing_features:
+                        features_list.append(Compound({
                             'cobblemon:feature_id': String('fertility'),
                             'fertility': Int(8)
-                        }),
-                        Compound({
+                        }))
+                    
+                    if 'dynamax_level' in missing_features:
+                        features_list.append(Compound({
                             'cobblemon:feature_id': String('dynamax_level'),
                             'dynamax_level': Int(0)
-                        }),
-                        Compound({
+                        }))
+                    
+                    if 'radiant' in missing_features:
+                        features_list.append(Compound({
                             'cobblemon:feature_id': String('radiant'),
                             'radiant': String('regular')
-                        }),
-                        Compound({
-                            'cobblemon:feature_id': String('character'),
-                            'character': String(character_value if character_value else 'a')
-                        })
-                    ])
+                        }))
                     
-                    pokemon['Features'] = new_features
+                    pokemon['Features'] = List[Compound](features_list)
                     transformed = True
-                    self.log(f"      [OK] Features Zarbi reconstruits")
+                    self.log(f"      [OK] Features manquantes ajoutées: {missing_features}")
         
         # Vérification et préservation des formes spéciales
-        elif 'FormId' in pokemon:
+        if 'FormId' in pokemon:
             form = pokemon['FormId']
             if form and form != 'normal':
                 self.log(f"      [INFO] Forme spéciale préservée: {form}")
