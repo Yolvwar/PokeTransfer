@@ -89,46 +89,80 @@ pip install nbtlib
 
 ## Étapes de Conversion
 
-### Étape 1 : Trouver les chemins de vos mondes
+### Étape 1 : Récupérer le dossier pokemon/
 
-#### Pour trouver le chemin de votre ANCIEN monde :
+Vous devez récupérer le dossier `pokemon/` depuis votre ancien monde (solo ou serveur).
 
- Ouvrez le **Launcher CurseForge**
-2. Faites un **clic droit** sur "Cobblemon Academy 2.0 ou Cacademy"
+#### Si vous jouez en solo :
+
+1. Ouvrez le **Launcher CurseForge**
+2. Faites un **clic droit** sur votre ModPack (ex: Cobblemon Academy 2.0)
 3. Cliquez sur "**Ouvrir le dossier**"
-4. Double-cliquez sur : `saves` → puis votre monde
-5. Dans la barre d'adresse en haut, cliquez et **copiez** le chemin complet
+4. Naviguez vers : `saves` → nom de votre monde (ex: world)
+5. Vous verrez le dossier **pokemon/** → **Copiez-le**
 
-**Exemple de chemin** :
-```
-C:\Users\VotreNom\curseforge\minecraft\Instances\Cobblemon Academy 2.0\saves\Nouveau monde
-```
+#### Si vous jouez sur un serveur :
 
-#### Pour trouver le chemin de votre NOUVEAU monde:
+1. Connectez-vous à votre serveur (FTP, SFTP, ou panneau de contrôle)
+2. Allez dans les fichiers de votre serveur
+3. Cherchez le dossier **world/**
+4. À l'intérieur, trouvez le dossier **pokemon/**
+5. **Téléchargez** ce dossier sur votre ordinateur
 
-Faites la même chose mais pour votre nouveau modpack ex: "CacademyV2"
+**Le dossier pokemon/ doit contenir :**
+- `pcstore/` (vos Pokémon dans le PC)
+- `playerpartystore/` (vos Pokémon dans votre équipe)
 
-**Exemple de chemin** :
-```
-C:\Users\VotreNom\curseforge\minecraft\Instances\Cacademy v2\saves\world-DEMO
-```
+---
 
-### Étape 3 : Lancer la conversion
+### Étape 2 : Lancer le script de conversion
 
- Ouvrez un **PowerShell**, à l'emplacement du script :
+1. Ouvrez un **PowerShell** ou **Invite de commandes** ou se trouve le script convert_pokemon_gui.py
 
-2. Dans votre invite de commande, lancez le script :
-   ```
+2. Lancez le script :
+   ```powershell
    python convert_pokemon_gui.py
    ```
 
-3. Le script va :
-   - Créer des backups automatiques de vos fichiers .dat ( en .backup) pour éviter toutes corruptions si erreurs
-   - Transformer la structure des Pokémon
-   - Copier vos Pokémon vers le nouveau monde
+3. Une fenêtre s'ouvre :
+   - Cliquez sur **"Parcourir"**
+   - Sélectionnez le dossier **pokemon/** que vous avez récupéré
+   - Le script détecte automatiquement les fichiers à convertir
+   - Cliquez sur **"Lancer la conversion"**
+
+4. Le script va :
+   - Créer des **backups automatiques** (.backup) de tous vos fichiers
+   - Transformer la structure des Pokémon (IVs, Features, data_version)
+   - Modifier les fichiers **sur place** dans le dossier pokemon/
+
+---
+
+### Étape 3 : Transférer le dossier converti
+
+#### Si vous jouez en solo :
+
+1. Ouvrez le **Launcher CurseForge**
+2. Faites un **clic droit** sur votre **nouveau modpack** (ex: "Cacademy v2")
+3. Cliquez sur "**Ouvrir le dossier**"
+4. Naviguez vers : `saves` → votre nouveau monde
+5. **Remplacez** le dossier **pokemon/** existant par votre dossier converti
+
+#### Si vous jouez sur un serveur :
+
+1. Connectez-vous à votre serveur (FTP, SFTP, ou panneau de contrôle)
+2. Allez dans `world/`
+3. **Supprimez** l'ancien dossier **pokemon/**
+4. **Uploadez** votre dossier **pokemon/** converti
+
+---
 
 ### Étape 4 : Vérifier dans le jeu
 
-1. Lancez **Minecraft** avec votre nouveau Modpack **Cobblemon**
-2. Chargez votre **nouveau monde**
+1. Lancez **Minecraft** avec votre nouveau Modpack
+2. Chargez votre **monde**
 3. Ouvrez votre **PC** et vérifiez que vos Pokémon sont là !
+4. Vérifiez aussi votre **équipe**
+
+**En cas de problème :**
+- Les fichiers `.backup` sont dans le même dossier que vos fichiers originaux
+- Renommez-les en `.dat` pour restaurer vos données originales

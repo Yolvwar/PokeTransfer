@@ -18,8 +18,7 @@ class PokemonConverter:
         self.root.resizable(True, True)
         self.root.configure(bg="#f5f5f5")
         
-        self.old_world_path = tk.StringVar()
-        self.new_world_path = tk.StringVar()
+        self.pokemon_folder_path = tk.StringVar()
         self.is_converting = False
         
         self.create_widgets()
@@ -39,12 +38,21 @@ class PokemonConverter:
         
         subtitle = tk.Label(
             header_frame,
-            text="Cobblemon Academy 2.0 vers 1.7",
+            text="Cobblemon Academy 2.0 → 1.7",
             font=("Segoe UI", 11),
             bg="#ffffff",
             fg="#7f8c8d"
         )
         subtitle.pack(pady=(8, 0))
+        
+        subtitle2 = tk.Label(
+            header_frame,
+            text="Sélectionnez le dossier pokemon/ de votre ancien monde",
+            font=("Segoe UI", 9),
+            bg="#ffffff",
+            fg="#95a5a6"
+        )
+        subtitle2.pack(pady=(4, 0))
         
         separator = tk.Frame(self.root, height=1, bg="#e0e0e0")
         separator.pack(fill="x")
@@ -54,18 +62,18 @@ class PokemonConverter:
         
         tk.Label(
             main_frame,
-            text="Monde source",
+            text="Dossier pokemon/ de l'ancien monde (v2.0)",
             font=("Segoe UI", 10, "normal"),
             bg="#f5f5f5",
             fg="#34495e"
         ).pack(anchor="w", pady=(0, 8))
         
-        old_frame = tk.Frame(main_frame, bg="#f5f5f5")
-        old_frame.pack(fill="x", pady=(0, 25))
+        pokemon_frame = tk.Frame(main_frame, bg="#f5f5f5")
+        pokemon_frame.pack(fill="x", pady=(0, 25))
         
-        entry_old = tk.Entry(
-            old_frame,
-            textvariable=self.old_world_path,
+        entry_pokemon = tk.Entry(
+            pokemon_frame,
+            textvariable=self.pokemon_folder_path,
             font=("Segoe UI", 10),
             state="readonly",
             bg="#ffffff",
@@ -74,12 +82,12 @@ class PokemonConverter:
             borderwidth=1,
             highlightthickness=0
         )
-        entry_old.pack(side="left", fill="x", expand=True, padx=(0, 10), ipady=8)
+        entry_pokemon.pack(side="left", fill="x", expand=True, padx=(0, 10), ipady=8)
         
-        btn_old = tk.Button(
-            old_frame,
+        btn_pokemon = tk.Button(
+            pokemon_frame,
             text="Parcourir",
-            command=self.browse_old_world,
+            command=self.browse_pokemon_folder,
             bg="#3498db",
             fg="#ffffff",
             font=("Segoe UI", 10, "normal"),
@@ -91,52 +99,23 @@ class PokemonConverter:
             activebackground="#2980b9",
             activeforeground="#ffffff"
         )
-        btn_old.pack(side="right")
-        btn_old.bind("<Enter>", lambda e: btn_old.config(bg="#2980b9"))
-        btn_old.bind("<Leave>", lambda e: btn_old.config(bg="#3498db"))
+        btn_pokemon.pack(side="right")
+        btn_pokemon.bind("<Enter>", lambda e: btn_pokemon.config(bg="#2980b9"))
+        btn_pokemon.bind("<Leave>", lambda e: btn_pokemon.config(bg="#3498db"))
         
-        tk.Label(
-            main_frame,
-            text="Monde destination",
-            font=("Segoe UI", 10, "normal"),
-            bg="#f5f5f5",
-            fg="#34495e"
-        ).pack(anchor="w", pady=(0, 8))
+        # Info box
+        info_frame = tk.Frame(main_frame, bg="#e8f4f8", relief="solid", borderwidth=1)
+        info_frame.pack(fill="x", pady=(0, 35), padx=5)
         
-        new_frame = tk.Frame(main_frame, bg="#f5f5f5")
-        new_frame.pack(fill="x", pady=(0, 35))
-        
-        entry_new = tk.Entry(
-            new_frame,
-            textvariable=self.new_world_path,
-            font=("Segoe UI", 10),
-            state="readonly",
-            bg="#ffffff",
+        info_text = tk.Label(
+            info_frame,
+            text="ℹ️ Le dossier doit contenir pcstore/ et playerpartystore/\nUn backup automatique sera créé avant conversion",
+            font=("Segoe UI", 9),
+            bg="#e8f4f8",
             fg="#2c3e50",
-            relief="solid",
-            borderwidth=1,
-            highlightthickness=0
+            justify="left"
         )
-        entry_new.pack(side="left", fill="x", expand=True, padx=(0, 10), ipady=8)
-        
-        btn_new = tk.Button(
-            new_frame,
-            text="Parcourir",
-            command=self.browse_new_world,
-            bg="#3498db",
-            fg="#ffffff",
-            font=("Segoe UI", 10, "normal"),
-            padx=25,
-            pady=9,
-            relief="flat",
-            cursor="hand2",
-            borderwidth=0,
-            activebackground="#2980b9",
-            activeforeground="#ffffff"
-        )
-        btn_new.pack(side="right")
-        btn_new.bind("<Enter>", lambda e: btn_new.config(bg="#2980b9"))
-        btn_new.bind("<Leave>", lambda e: btn_new.config(bg="#3498db"))
+        info_text.pack(pady=12, padx=15)
         
         button_frame = tk.Frame(main_frame, bg="#f5f5f5")
         button_frame.pack(fill="x", pady=(0, 25))
@@ -198,28 +177,38 @@ class PokemonConverter:
         
         instructions = tk.Label(
             footer_frame,
-            text="Sélectionnez les deux dossiers de monde, puis lancez la conversion",
+            text="Sélectionnez votre dossier pokemon/, puis lancez la conversion",
             font=("Segoe UI", 9),
             bg="#ffffff",
             fg="#95a5a6"
         )
         instructions.pack()
         
-    def browse_old_world(self):
+    def browse_pokemon_folder(self):
         path = filedialog.askdirectory(
-            title="Sélectionner le dossier du monde Cobblemon 2.0"
+            title="Sélectionner le dossier pokemon/ (contenant pcstore et playerpartystore)"
         )
         if path:
-            self.old_world_path.set(path)
-            self.log(f"[OK] Monde source: {path}")
-            
-    def browse_new_world(self):
-        path = filedialog.askdirectory(
-            title="Sélectionner le dossier du monde Cobblemon 1.7"
-        )
-        if path:
-            self.new_world_path.set(path)
-            self.log(f"[OK] Monde destination: {path}")
+            pokemon_path = Path(path)
+            # Vérifier que les sous-dossiers existent
+            if (pokemon_path / "pcstore").exists() or (pokemon_path / "playerpartystore").exists():
+                self.pokemon_folder_path.set(path)
+                self.log(f"[OK] Dossier pokemon: {path}")
+                
+                # Afficher ce qui a été trouvé
+                if (pokemon_path / "pcstore").exists():
+                    pcstore_files = len(list((pokemon_path / "pcstore").rglob("*.dat")))
+                    self.log(f"    → pcstore: {pcstore_files} fichiers trouvés")
+                if (pokemon_path / "playerpartystore").exists():
+                    playerparty_files = len(list((pokemon_path / "playerpartystore").rglob("*.dat")))
+                    self.log(f"    → playerpartystore: {playerparty_files} fichiers trouvés")
+            else:
+                messagebox.showerror(
+                    "Erreur",
+                    "Le dossier sélectionné ne contient pas pcstore/ ou playerpartystore/\n\n"
+                    "Veuillez sélectionner le dossier pokemon/ qui contient ces sous-dossiers."
+                )
+                self.log(f"[ERREUR] Dossier invalide: {path}")
             
     def log(self, message):
         self.log_text.insert("end", message + "\n")
@@ -227,12 +216,8 @@ class PokemonConverter:
         self.root.update()
         
     def start_conversion(self):
-        if not self.old_world_path.get():
-            messagebox.showerror("Erreur", "Veuillez sélectionner le monde source (2.0)")
-            return
-            
-        if not self.new_world_path.get():
-            messagebox.showerror("Erreur", "Veuillez sélectionner le monde destination (1.7)")
+        if not self.pokemon_folder_path.get():
+            messagebox.showerror("Erreur", "Veuillez sélectionner le dossier pokemon/")
             return
             
         if self.is_converting:
@@ -242,7 +227,9 @@ class PokemonConverter:
         result = messagebox.askyesno(
             "Confirmation",
             "Voulez-vous vraiment convertir les Pokémon?\n\n"
-            "Un backup sera créé automatiquement."
+            "⚠️ Les fichiers seront modifiés sur place\n"
+            "Un backup (.backup) sera créé automatiquement\n\n"
+            "Assurez-vous d'avoir une copie de sauvegarde!"
         )
         
         if not result:
@@ -259,13 +246,9 @@ class PokemonConverter:
         
     def convert_pokemon(self):
         try:
-            old_world = self.old_world_path.get()
-            new_world = self.new_world_path.get()
+            pokemon_folder = Path(self.pokemon_folder_path.get())
             
-            folders = [
-                "pokemon/pcstore",
-                "pokemon/playerpartystore",
-            ]
+            subfolders = ["pcstore", "playerpartystore"]
             
             total_pokemon = 0
             total_transformed = 0
@@ -273,38 +256,37 @@ class PokemonConverter:
             self.log("=" * 70)
             self.log("DÉBUT DE LA CONVERSION")
             self.log("=" * 70)
+            self.log(f"Dossier: {pokemon_folder}\n")
             
-            for folder in folders:
-                old_folder = Path(old_world) / folder
-                new_folder = Path(new_world) / folder
+            for subfolder in subfolders:
+                folder_path = pokemon_folder / subfolder
                 
-                self.log(f"\n[Traitement] {folder}")
+                self.log(f"\n[Traitement] {subfolder}/")
                 self.log("-" * 70)
                 
-                if not old_folder.exists():
-                    self.log(f"  [ATTENTION] Dossier source non trouvé")
+                if not folder_path.exists():
+                    self.log(f"  [INFO] Dossier non trouvé, passage au suivant")
                     continue
                 
-                dat_files = list(old_folder.rglob("*.dat"))
+                dat_files = list(folder_path.rglob("*.dat"))
                 
                 if not dat_files:
                     self.log(f"  [INFO] Aucun fichier .dat trouvé")
                     continue
                 
-                for old_file in dat_files:
+                self.log(f"  Fichiers trouvés: {len(dat_files)}")
+                
+                for dat_file in dat_files:
                     try:
-                        relative_path = old_file.relative_to(old_folder)
-                        new_file = new_folder / relative_path
+                        relative_path = dat_file.relative_to(folder_path)
                         
-                        new_file.parent.mkdir(parents=True, exist_ok=True)
+                        # Backup automatique
+                        backup_path = str(dat_file) + '.backup'
+                        if not Path(backup_path).exists():
+                            shutil.copy2(dat_file, backup_path)
+                            self.log(f"  [Backup] {relative_path}.backup créé")
                         
-                        # Backup
-                        if new_file.exists():
-                            backup_path = str(new_file) + '.backup'
-                            if not Path(backup_path).exists():
-                                shutil.copy2(new_file, backup_path)
-                        
-                        data = nbt.load(str(old_file))
+                        data = nbt.load(str(dat_file))
                         file_modified = False
                         
                         for box_key in list(data.keys()):
@@ -335,8 +317,10 @@ class PokemonConverter:
                                             total_pokemon += 1
                         
                         if file_modified:
-                            data.save(str(new_file))
+                            data.save(str(dat_file))
                             self.log(f"  [Sauvegarde] {relative_path}")
+                        else:
+                            self.log(f"  [Info] Aucune modification nécessaire")
                         
                     except Exception as e:
                         self.log(f"  [ERREUR] {relative_path}: {e}")
@@ -350,10 +334,11 @@ class PokemonConverter:
             
             messagebox.showinfo(
                 "Succès",
-                f"Conversion terminée!\n\n"
+                f"Conversion terminée avec succès!\n\n"
                 f"Pokémon traités: {total_pokemon}\n"
                 f"Pokémon transformés: {total_transformed}\n\n"
-                f"Vous pouvez maintenant lancer votre monde 1.7"
+                f"Les fichiers .backup ont été créés\n"
+                f"Vous pouvez maintenant utiliser ce dossier dans votre monde 1.7"
             )
             
         except Exception as e:
@@ -384,8 +369,10 @@ class PokemonConverter:
                 transformed = True
                 self.log(f"      [OK] IVs transformés")
             
-            if hasattr(ivs, 'keys') and 'HyperTrained' in ivs:
+            # Vérifier HyperTrained après avoir potentiellement remplacé IVs
+            if hasattr(pokemon['IVs'], 'keys') and 'HyperTrained' in pokemon['IVs']:
                 del pokemon['IVs']['HyperTrained']
+                self.log(f"      [OK] HyperTrained supprimé")
         
         keys_to_remove = ['HeldItemDroppableByAI', 'HeldItemVisible']
         for key in keys_to_remove:
