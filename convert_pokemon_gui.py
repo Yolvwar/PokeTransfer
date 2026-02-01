@@ -289,6 +289,7 @@ class PokemonConverter:
                         data = nbt.load(str(dat_file))
                         file_modified = False
                         
+                        # Traiter les Box (pcstore)
                         for box_key in list(data.keys()):
                             if box_key.startswith('Box'):
                                 box = data[box_key]
@@ -315,6 +316,23 @@ class PokemonConverter:
                                                 total_transformed += 1
                                             
                                             total_pokemon += 1
+                        
+                        # Traiter les Slots directs (playerpartystore)
+                        for slot_key in list(data.keys()):
+                            if slot_key.startswith('Slot'):
+                                pokemon = data[slot_key]
+                                
+                                if hasattr(pokemon, 'keys') and 'Species' in pokemon:
+                                    species = pokemon.get('Species', 'Unknown')
+                                    level = pokemon.get('Level', '?')
+                                    
+                                    self.log(f"  [Pokemon] {species} (Niv.{level}) - {slot_key}")
+                                    
+                                    if self.transform_pokemon(pokemon):
+                                        file_modified = True
+                                        total_transformed += 1
+                                    
+                                    total_pokemon += 1
                         
                         if file_modified:
                             data.save(str(dat_file))
