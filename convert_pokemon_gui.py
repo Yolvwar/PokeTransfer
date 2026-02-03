@@ -1,5 +1,5 @@
 """
-CONVERTISSEUR POKÉMON - v2.0 → v1.7
+CONVERTISSEUR POKÉMON COBBLEMON - Cobblemon Academy v2.0 → Cobblemon v1.7
 Interface pour utilisateur
 """
 
@@ -38,7 +38,7 @@ class PokemonConverter:
         
         subtitle = tk.Label(
             header_frame,
-            text="Cobblemon Academy 2.0 → 1.7",
+            text="Cobblemon Academy 2.0 → Cobblemon 1.7",
             font=("Segoe UI", 11),
             bg="#ffffff",
             fg="#7f8c8d"

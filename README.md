@@ -1,6 +1,6 @@
 # Guide Simple - Transférer vos Pokémon entre versions Cobblemon
 
-**Ce guide vous aide à transférer vos Pokémon du PC de Cobblemon Academy 2.0 vers Cobblemon 1.6**
+**Ce guide vous aide à transférer vos Pokémon du PC de Cobblemon Academy 2.0 vers Cobblemon 1.7**
 
 ---
 
